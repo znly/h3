@@ -109,7 +109,7 @@ func H3_SET_RESOLUTION(h3 *H3Index, res int) {
  * Gets the resolution res integer digit (0-7) of h3.
  */
 func H3_GET_INDEX_DIGIT(h3 H3Index, res int) Direction {
-	return Direction((uint64(h3) >> ((MAX_H3_RES - (res)) * H3_PER_DIGIT_OFFSET)) & uint64(H3_DIGIT_MASK))
+	return Direction((uint64(h3) >> uint64(((MAX_H3_RES - (res)) * H3_PER_DIGIT_OFFSET)) & uint64(H3_DIGIT_MASK)))
 }
 
 /**
@@ -131,7 +131,7 @@ func H3_GET_RESERVED_BITS(h3 H3Index) int {
  * Sets the resolution res digit of h3 to the integer digit (0-7)
  */
 func H3_SET_INDEX_DIGIT(h3 *H3Index, res int, digit Direction) {
-	*h3 = H3Index((uint64(*h3) & ^(uint64(H3_DIGIT_MASK) << ((MAX_H3_RES - (res)) * H3_PER_DIGIT_OFFSET))) | (uint64(digit) << ((MAX_H3_RES - (res)) * H3_PER_DIGIT_OFFSET)))
+	*h3 = H3Index((uint64(*h3) & ^(uint64(H3_DIGIT_MASK) << uint64(((MAX_H3_RES - (res)) * H3_PER_DIGIT_OFFSET)))) | (uint64(digit) << uint64(((MAX_H3_RES - (res)) * H3_PER_DIGIT_OFFSET))))
 }
 
 /**

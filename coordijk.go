@@ -1,6 +1,5 @@
 package h3
 
-import "C"
 import (
 	"math"
 )
