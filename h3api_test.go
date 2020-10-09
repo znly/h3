@@ -15,19 +15,19 @@ import (
 )
 
 func TestH3Api(t *testing.T) {
-	t.Run("geoToH3_res", func(t *testing.T) {
+	t.Run("GeoToH3_res", func(t *testing.T) {
 		anywhere := GeoCoord{0, 0}
-		require.True(t, geoToH3(&anywhere, -1) == 0, "resolution below 0 is invalid")
-		require.True(t, geoToH3(&anywhere, 16) == 0, "resolution above 15 is invalid")
+		require.True(t, GeoToH3(&anywhere, -1) == 0, "resolution below 0 is invalid")
+		require.True(t, GeoToH3(&anywhere, 16) == 0, "resolution above 15 is invalid")
 	})
 
-	t.Run("geoToH3_coord", func(t *testing.T) {
+	t.Run("GeoToH3_coord", func(t *testing.T) {
 		invalidLat := GeoCoord{math.NaN(), 0}
 		invalidLon := GeoCoord{0, math.NaN()}
 		invalidLatLon := GeoCoord{math.Inf(1), math.Inf(-1)}
-		require.True(t, geoToH3(&invalidLat, 1) == 0, "invalid latitude is rejected")
-		require.True(t, geoToH3(&invalidLon, 1) == 0, "invalid longitude is rejected")
-		require.True(t, geoToH3(&invalidLatLon, 1) == 0, "coordinates with infinity are rejected")
+		require.True(t, GeoToH3(&invalidLat, 1) == 0, "invalid latitude is rejected")
+		require.True(t, GeoToH3(&invalidLon, 1) == 0, "invalid longitude is rejected")
+		require.True(t, GeoToH3(&invalidLatLon, 1) == 0, "coordinates with infinity are rejected")
 	})
 
 	t.Run("h3ToGeoBoundary_classIIIEdgeVertex", func(t *testing.T) {
@@ -119,7 +119,7 @@ func _Test_testdata(t *testing.T) {
 					h3ToGeo(h, &g)
 
 					require.True(t, geoDegreeEqual(&g, expectG), "h3ToGeo %x %d %v %v", h, h, expectG.AsDegrees(), g.AsDegrees())
-					require.Equal(t, h, geoToH3(expectG, h3GetResolution(h)), "h3ToGeo %x %d", h, h)
+					require.Equal(t, h, GeoToH3(expectG, h3GetResolution(h)), "h3ToGeo %x %d", h, h)
 				}
 			}
 		}

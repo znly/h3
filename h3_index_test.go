@@ -16,13 +16,13 @@ func GeoFromWGS84(lat float64, lon float64) *GeoCoord {
 
 func Test_geoToH3(t *testing.T) {
 
-	t.Run("geoToH3", func(t *testing.T) {
-		require.Equal(t, H3Index(614553222213795839), geoToH3(GeoFromWGS84(0, 0), 8))
-		require.Equal(t, H3Index(613287273236004863), geoToH3(GeoFromWGS84(45, 45), 8))
-		require.Equal(t, H3Index(612544946678792191), geoToH3(GeoFromWGS84(90, 90), 8))
+	t.Run("GeoToH3", func(t *testing.T) {
+		require.Equal(t, H3Index(614553222213795839), GeoToH3(GeoFromWGS84(0, 0), 8))
+		require.Equal(t, H3Index(613287273236004863), GeoToH3(GeoFromWGS84(45, 45), 8))
+		require.Equal(t, H3Index(612544946678792191), GeoToH3(GeoFromWGS84(90, 90), 8))
 	})
 
-	t.Run("geoToH3 2", func(t *testing.T) {
+	t.Run("GeoToH3 2", func(t *testing.T) {
 		g := GeoCoord{0.659966917655, 2*3.14159 - 2.1364398519396}
 
 		expects := []uint64{
@@ -48,7 +48,7 @@ func Test_geoToH3(t *testing.T) {
 		}
 
 		for i := range expects {
-			require.Equal(t, H3Index(expects[i]), geoToH3(&g, i))
+			require.Equal(t, H3Index(expects[i]), GeoToH3(&g, i))
 		}
 	})
 
@@ -89,18 +89,18 @@ func Test_getPentagonIndexes(t *testing.T) {
 }
 
 func Test_GeoToH3(t *testing.T) {
-	t.Run("geoToH3ExtremeCoordinates", func(t *testing.T) {
+	t.Run("GeoToH3ExtremeCoordinates", func(t *testing.T) {
 		// Check that none of these cause crashes.
 		g := GeoCoord{0, 1e45}
-		t.Log(geoToH3(&g, 14)) // 641677981140798679
+		t.Log(GeoToH3(&g, 14)) // 641677981140798679
 
 		g2 := GeoCoord{1e46, 1e45}
-		t.Log(geoToH3(&g2, 15))
+		t.Log(GeoToH3(&g2, 15))
 
 		var g4 GeoCoord
 		setGeoDegs(&g4, 2, -3e39)
 
-		t.Log(geoToH3(&g4, 0))
+		t.Log(GeoToH3(&g4, 0))
 	})
 
 	t.Run("faceIjkToH3ExtremeCoordinates", func(t *testing.T) {
@@ -136,7 +136,7 @@ func Test_GeoToH3(t *testing.T) {
 		for i := 0; i <= MAX_H3_RES; i++ {
 			geoCoord := GeoCoord{0, 0}
 
-			h3 := geoToH3(&geoCoord, i)
+			h3 := GeoToH3(&geoCoord, i)
 
 			require.True(t, h3IsValid(h3), "h3IsValid failed on resolution %d", i)
 		}
@@ -144,7 +144,7 @@ func Test_GeoToH3(t *testing.T) {
 
 	t.Run("h3IsValidDigits", func(t *testing.T) {
 		geoCoord := GeoCoord{0, 0}
-		h3 := geoToH3(&geoCoord, 1)
+		h3 := GeoToH3(&geoCoord, 1)
 		// Set a bit for an unused digit to something else.
 		h3 ^= 1
 		require.True(t, !h3IsValid(h3), "h3IsValid failed on invalid unused digits")
@@ -226,7 +226,7 @@ func Test_GeoToH3(t *testing.T) {
 	t.Run("h3IsResClassIII", func(t *testing.T) {
 		coord := GeoCoord{0, 0}
 		for i := 0; i <= MAX_H3_RES; i++ {
-			h := geoToH3(&coord, i)
+			h := GeoToH3(&coord, i)
 			require.True(t, h3IsResClassIII(h) == isResClassIII(i),
 				"matches existing definition")
 		}
@@ -244,9 +244,9 @@ func Test_h3ToCenterChild(t *testing.T) {
 		for res := 0; res <= MAX_H3_RES-1; res++ {
 			for childRes := res + 1; childRes <= MAX_H3_RES; childRes++ {
 				var centroid GeoCoord
-				h3Index := geoToH3(&baseCentroid, res)
+				h3Index := GeoToH3(&baseCentroid, res)
 				h3ToGeo(h3Index, &centroid)
-				geoChild := geoToH3(&centroid, childRes)
+				geoChild := GeoToH3(&centroid, childRes)
 				centerChild := h3ToCenterChild(h3Index, childRes)
 				require.True(t, centerChild == geoChild, "center child should be same as indexed centroid at child resolution")
 				require.True(t, h3GetResolution(centerChild) == childRes, "center child should have correct resolution")
@@ -333,7 +333,7 @@ func Test_h3ToGeoBoundary(t *testing.T) {
 
 func Test_h3ToChildren(t *testing.T) {
 	sf := GeoCoord{0.659966917655, 2*3.14159 - 2.1364398519396}
-	sfHex8 := geoToH3(&sf, 8) // 613196569891569663
+	sfHex8 := GeoToH3(&sf, 8) // 613196569891569663
 
 	var verifyCountAndUniqueness = func(t *testing.T, children []H3Index, paddedCount int, expectedCount int) {
 		numFound := 0
@@ -371,7 +371,7 @@ func Test_h3ToChildren(t *testing.T) {
 
 		var center GeoCoord
 		h3ToGeo(sfHex8, &center)
-		sfHex9_0 := geoToH3(&center, 9)
+		sfHex9_0 := GeoToH3(&center, 9)
 
 		numFound := 0
 		for i := range sfHex9s {
@@ -392,7 +392,7 @@ func Test_h3ToChildren(t *testing.T) {
 			avg := GeoCoord{}
 			avg.Lat = (outside.Verts[i].Lat + center.Lat) / 2
 			avg.Lon = (outside.Verts[i].Lon + center.Lon) / 2
-			avgHex9 := geoToH3(&avg, 9)
+			avgHex9 := GeoToH3(&avg, 9)
 			for j := range sfHex9s {
 				if avgHex9 == sfHex9s[j] {
 					numFound++
@@ -424,7 +424,7 @@ func Test_h3ToChildren(t *testing.T) {
 	})
 
 	t.Run("childResTooFine", func(t *testing.T) {
-		sfHexMax := geoToH3(&sf, MAX_H3_RES)
+		sfHexMax := GeoToH3(&sf, MAX_H3_RES)
 		children := make([]H3Index, 0)
 		h3ToChildren(sfHexMax, MAX_H3_RES+1, &children)
 		verifyCountAndUniqueness(t, children, 7, 0)
@@ -451,7 +451,7 @@ func Test_h3ToChildren(t *testing.T) {
 func Test_maxH3ToChildrenSize(t *testing.T) {
 	sf := GeoCoord{0.659966917655, 2*3.14159 - 2.1364398519396}
 
-	parent := geoToH3(&sf, 7)
+	parent := GeoToH3(&sf, 7)
 
 	require.True(t, maxH3ToChildrenSize(parent, 3) == 0, "got expected size for coarser res")
 	require.True(t, maxH3ToChildrenSize(parent, 7) == 1, "got expected size for same res")

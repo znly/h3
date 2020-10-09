@@ -135,7 +135,7 @@ func H3_SET_INDEX_DIGIT(h3 *H3Index, res int, digit Direction) {
 }
 
 /**
- * Invalid index used to indicate an error from geoToH3 and related functions.
+ * Invalid index used to indicate an error from GeoToH3 and related functions.
  */
 const H3_INVALID_INDEX = H3Index(0)
 
@@ -837,7 +837,7 @@ func _faceIjkToH3(fijk *FaceIJK, res int) H3Index {
 * @param res The desired H3 resolution for the encoding.
 * @return The encoded H3Index (or 0 on failure).
  */
-func geoToH3(g *GeoCoord, res int) H3Index {
+func GeoToH3(g *GeoCoord, res int) H3Index {
 	if res < 0 || res > MAX_H3_RES {
 		return H3_INVALID_INDEX
 	}

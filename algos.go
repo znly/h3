@@ -646,7 +646,7 @@ func _getEdgeHexagons(geofence *Geofence, numHexagons int, res int, numSearchHex
 			var interpolate GeoCoord
 			interpolate.Lat = (origin.Lat * float64(numHexesEstimate-j) / float64(numHexesEstimate)) + (destination.Lat * float64(j) / float64(numHexesEstimate))
 			interpolate.Lon = (origin.Lon * float64(numHexesEstimate-j) / float64(numHexesEstimate)) + (destination.Lon * float64(j) / float64(numHexesEstimate))
-			pointHex := geoToH3(&interpolate, res)
+			pointHex := GeoToH3(&interpolate, res)
 			// A simple hash to store the hexagon, or move to another place if
 			// needed
 			loc := (int)(uint64(pointHex) % uint64(numHexagons))

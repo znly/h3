@@ -49,7 +49,7 @@ func _Test_vertexHash(t *testing.T) {
 	var hash2 uint32
 	numBuckets := 1000
 	for res := 0; res < 11; res++ {
-		//centerIndex = geoToH3(&center, res)
+		//centerIndex = GeoToH3(&center, res)
 		//h3ToGeoBoundary(centerIndex, &outline)
 		for i := 0; i < outline.numVerts; i++ {
 			hash1 = _hashVertex(&outline.Verts[i], res, numBuckets)
