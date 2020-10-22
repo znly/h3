@@ -864,17 +864,7 @@ func GeoToH3(g *GeoCoord, res int) H3Index {
 func GeoToH3FromDeg(g *GeoCoord, res int) H3Index {
 	gRads := g.AsRadians()
 
-	if res < 0 || res > MAX_H3_RES {
-		return H3_INVALID_INDEX
-	}
-
-	if math.IsInf(gRads.Lat, 0) || math.IsInf(g.Lon, 0) {
-		return H3_INVALID_INDEX
-	}
-
-	fijk := FaceIJK{}
-	_geoToFaceIjk(gRads, res, &fijk)
-	return _faceIjkToH3(&fijk, res)
+	return GeoToH3(gRads, res)
 }
 
 /**
