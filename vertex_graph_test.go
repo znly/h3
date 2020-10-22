@@ -7,19 +7,19 @@ import (
 )
 
 // Fixtures
-var center GeoCoord
+var center geoCoord
 
-var vertex1 GeoCoord
+var vertex1 geoCoord
 
-var vertex2 GeoCoord
+var vertex2 geoCoord
 
-var vertex3 GeoCoord
+var vertex3 geoCoord
 
-var vertex4 GeoCoord
+var vertex4 geoCoord
 
-var vertex5 GeoCoord
+var vertex5 geoCoord
 
-var vertex6 GeoCoord
+var vertex6 geoCoord
 
 func init() {
 	setGeoDegs(&center, 37.77362016769341, -122.41673772517154)

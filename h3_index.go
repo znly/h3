@@ -837,7 +837,7 @@ func _faceIjkToH3(fijk *FaceIJK, res int) H3Index {
 * @param res The desired H3 resolution for the encoding.
 * @return The encoded H3Index (or 0 on failure).
  */
-func GeoToH3(g *GeoCoord, res int) H3Index {
+func GeoToH3(g *geoCoord, res int) H3Index {
 	if res < 0 || res > MAX_H3_RES {
 		return H3_INVALID_INDEX
 	}
@@ -947,7 +947,7 @@ func _h3ToFaceIjk(h H3Index, fijk *FaceIJK) {
 * @param h3 The H3 index.
 * @param g The spherical coordinates of the H3 cell center.
  */
-func h3ToGeo(h3 H3Index, g *GeoCoord) {
+func h3ToGeo(h3 H3Index, g *geoCoord) {
 	var fijk FaceIJK
 	_h3ToFaceIjk(h3, &fijk)
 	_faceIjkToGeo(&fijk, H3_GET_RESOLUTION(h3), g)

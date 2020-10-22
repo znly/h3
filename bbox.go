@@ -26,7 +26,7 @@ func bboxIsTransmeridian(bbox *BBox) bool {
  * @param bbox   Input bounding box
  * @param center Output center coordinate
  */
-func bboxCenter(bbox *BBox, center *GeoCoord) {
+func bboxCenter(bbox *BBox, center *geoCoord) {
 	center.Lat = (bbox.north + bbox.south) / 2.0
 	// If the bbox crosses the antimeridian, shift east 360 degrees
 	east := bbox.east
@@ -42,7 +42,7 @@ func bboxCenter(bbox *BBox, center *GeoCoord) {
  * @param  point Point to test
  * @return       Whether the point is contained
  */
-func bboxContains(bbox *BBox, point *GeoCoord) bool {
+func bboxContains(bbox *BBox, point *geoCoord) bool {
 	return point.Lat >= bbox.south && point.Lat <= bbox.north && func() bool {
 		if bboxIsTransmeridian(bbox) {
 			return point.Lon >= bbox.west || point.Lon <= bbox.east
@@ -71,7 +71,7 @@ func bboxEquals(b1 *BBox, b2 *BBox) bool {
 func _hexRadiusKm(h3Index H3Index) float64 {
 	// There is probably a cheaper way to determine the radius of a
 	// hexagon, but this way is conceptually simple
-	var h3Center GeoCoord
+	var h3Center geoCoord
 	var h3Boundary GeoBoundary
 	h3ToGeo(h3Index, &h3Center)
 	h3ToGeoBoundary(h3Index, &h3Boundary)
@@ -98,7 +98,7 @@ func bboxHexEstimate(bbox *BBox, res int) int {
 	pentagonAreaKm2 := 2.59807621135 * pentagonRadiusKm * pentagonRadiusKm
 
 	// Then get the area of the bounding box of the geofence in question
-	var p1, p2 GeoCoord
+	var p1, p2 geoCoord
 	p1.Lat = bbox.north
 	p1.Lon = bbox.east
 	p2.Lat = bbox.south
@@ -125,7 +125,7 @@ func bboxHexEstimate(bbox *BBox, res int) int {
 *  @param res the resolution of the H3 hexagons to trace the line
 *  @return the estimated number of hexagons required to trace the line
  */
-func lineHexEstimate(origin *GeoCoord, destination *GeoCoord, res int) int {
+func lineHexEstimate(origin *geoCoord, destination *geoCoord, res int) int {
 	// Get the area of the pentagon as the maximally-distorted area possible
 	pentagons := make([]H3Index, 0)
 	getPentagonIndexes(res, &pentagons)

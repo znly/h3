@@ -23,17 +23,17 @@ func Test_pointSquareDist(t *testing.T) {
 
 func Test_geoToVec3d(t *testing.T) {
 	origin := Vec3d{}
-	c1 := GeoCoord{0, 0}
+	c1 := geoCoord{0, 0}
 	var p1 Vec3d
 	_geoToVec3d(&c1, &p1)
 	require.True(t, math.Abs(_pointSquareDist(&origin, &p1)-1) < EPSILON_RAD, "Geo point is on the unit sphere")
 
-	c2 := GeoCoord{M_PI_2, 0}
+	c2 := geoCoord{M_PI_2, 0}
 	var p2 Vec3d
 	_geoToVec3d(&c2, &p2)
 	require.True(t, math.Abs(_pointSquareDist(&p1, &p2)-2) < EPSILON_RAD, "Geo point is on another axis")
 
-	c3 := GeoCoord{M_PI, 0}
+	c3 := geoCoord{M_PI, 0}
 	var p3 Vec3d
 	_geoToVec3d(&c3, &p3)
 	require.True(t, math.Abs(_pointSquareDist(&p1, &p3)-4) < EPSILON_RAD, "Geo point is the other side of the sphere")

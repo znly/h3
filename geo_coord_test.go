@@ -15,9 +15,9 @@ func Test_radsToDegs(t *testing.T) {
 }
 
 func Test__geoDistRads(t *testing.T) {
-	var p1 GeoCoord
+	var p1 geoCoord
 	setGeoDegs(&p1, 10, 10)
-	var p2 GeoCoord
+	var p2 geoCoord
 	setGeoDegs(&p2, 0, 10)
 
 	// TODO: Epsilon is relatively large
@@ -41,18 +41,18 @@ func Test_constrainLatLng(t *testing.T) {
 }
 
 func Test__geoAzDistanceRads_noop(t *testing.T) {
-	start := GeoCoord{15, 10}
-	var out GeoCoord
-	expected := GeoCoord{15, 10}
+	start := geoCoord{15, 10}
+	var out geoCoord
+	expected := geoCoord{15, 10}
 	_geoAzDistanceRads(&start, 0, 0, &out)
 	require.True(t, geoAlmostEqual(&expected, &out),
 		"0 distance produces same point")
 }
 
 func Test__geoAzDistanceRads_dueNorthSouth(t *testing.T) {
-	var start GeoCoord
-	var out GeoCoord
-	var expected GeoCoord
+	var start geoCoord
+	var out geoCoord
+	var expected geoCoord
 
 	// Due north to north pole
 	setGeoDegs(&start, 45, 1)
@@ -84,9 +84,9 @@ func Test__geoAzDistanceRads_dueNorthSouth(t *testing.T) {
 }
 
 func Test__geoAzDistanceRads_poleToPole(t *testing.T) {
-	var start GeoCoord
-	var out GeoCoord
-	var expected GeoCoord
+	var start geoCoord
+	var out geoCoord
+	var expected geoCoord
 
 	// Azimuth doesn't really matter in this case. Any azimuth from the
 	// north pole is south, any azimuth from the south pole is north.
@@ -103,10 +103,10 @@ func Test__geoAzDistanceRads_poleToPole(t *testing.T) {
 }
 
 func Test__geoAzDistanceRads_invertible(t *testing.T) {
-	var start GeoCoord
+	var start geoCoord
 	setGeoDegs(&start, 15, 10)
 
-	var out GeoCoord
+	var out geoCoord
 	azimuth := degsToRads(20)
 	degrees180 := degsToRads(180)
 	distance := degsToRads(15)
@@ -114,15 +114,15 @@ func Test__geoAzDistanceRads_invertible(t *testing.T) {
 	_geoAzDistanceRads(&start, azimuth, distance, &out)
 
 	require.True(t, math.Abs(_geoDistRads(&start, &out)-distance) < EPSILON_RAD, "moved distance is as expected")
-	var start2 GeoCoord = out
+	var start2 geoCoord = out
 	_geoAzDistanceRads(&start2, azimuth+degrees180, distance, &out)
 	// TODO: Epsilon is relatively large
 	require.True(t, _geoDistRads(&start, &out) < 0.01, "moved back to origin")
 }
 
 func Test__geoDistRads_wrappedLongitude(t *testing.T) {
-	negativeLongitude := GeoCoord{Lat: -(M_PI + M_PI_2)}
-	zero := GeoCoord{}
+	negativeLongitude := geoCoord{Lat: -(M_PI + M_PI_2)}
+	zero := geoCoord{}
 
 	require.True(t, math.Abs(M_PI_2-_geoDistRads(&negativeLongitude, &zero)) < EPSILON_RAD, "Distance with wrapped longitude")
 	require.True(t, math.Abs(M_PI_2-_geoDistRads(&zero, &negativeLongitude)) < EPSILON_RAD, "Distance with wrapped longitude and swapped arguments")

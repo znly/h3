@@ -48,8 +48,8 @@ func addLinkedLoop(polygon *LinkedGeoPolygon, loop *LinkedGeoLoop) *LinkedGeoLoo
 * @param  vertex Coordinate to add
 * @return        Pointer to the coordinate
  */
-func addLinkedCoord(loop *LinkedGeoLoop, vertex *GeoCoord) *LinkedGeoCoord {
-	coord := &LinkedGeoCoord{
+func addLinkedCoord(loop *LinkedGeoLoop, vertex *geoCoord) *LinkedgeoCoord {
+	coord := &LinkedgeoCoord{
 		vertex: *vertex,
 	}
 
@@ -70,7 +70,7 @@ func addLinkedCoord(loop *LinkedGeoLoop, vertex *GeoCoord) *LinkedGeoCoord {
 * @param loop Loop to free
  */
 func destroyLinkedGeoLoop(loop *LinkedGeoLoop) {
-	var nextCoord *LinkedGeoCoord
+	var nextCoord *LinkedgeoCoord
 
 	for currentCoord := loop.first; currentCoord != nil; currentCoord = nextCoord {
 		nextCoord = currentCoord.next

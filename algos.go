@@ -633,7 +633,7 @@ func polyfill(geoPolygon *GeoPolygon, res int, out []H3Index) {
 func _getEdgeHexagons(geofence *Geofence, numHexagons int, res int, numSearchHexes *int, search []H3Index, found []H3Index) int {
 	for i := 0; i < geofence.numVerts; i++ {
 		origin := geofence.verts[i]
-		var destination GeoCoord
+		var destination geoCoord
 
 		if i == geofence.numVerts-1 {
 			destination = geofence.verts[0]
@@ -643,7 +643,7 @@ func _getEdgeHexagons(geofence *Geofence, numHexagons int, res int, numSearchHex
 
 		numHexesEstimate := lineHexEstimate(&origin, &destination, res)
 		for j := 0; j < numHexesEstimate; j++ {
-			var interpolate GeoCoord
+			var interpolate geoCoord
 			interpolate.Lat = (origin.Lat * float64(numHexesEstimate-j) / float64(numHexesEstimate)) + (destination.Lat * float64(j) / float64(numHexesEstimate))
 			interpolate.Lon = (origin.Lon * float64(numHexesEstimate-j) / float64(numHexesEstimate)) + (destination.Lon * float64(j) / float64(numHexesEstimate))
 			pointHex := GeoToH3(&interpolate, res)
@@ -819,7 +819,7 @@ func _polyfillInternal(geoPolygon *GeoPolygon, res int, out []H3Index) int {
 				}
 
 				// Check if the hexagon is in the polygon or not
-				var hexCenter GeoCoord
+				var hexCenter geoCoord
 				h3ToGeo(hex, &hexCenter)
 
 				// If not, skip
@@ -889,8 +889,8 @@ func h3SetToVertexGraph(h3Set []H3Index, numHexes int, graph *VertexGraph) {
 	// Iterate through every hexagon
 	for i := 0; i < numHexes; i++ {
 		var vertices GeoBoundary
-		var fromVtx *GeoCoord
-		var toVtx *GeoCoord
+		var fromVtx *geoCoord
+		var toVtx *geoCoord
 		var edge *VertexNode
 
 		h3ToGeoBoundary(h3Set[i], &vertices)
@@ -925,7 +925,7 @@ func h3SetToVertexGraph(h3Set []H3Index, numHexes int, graph *VertexGraph) {
 func _vertexGraphToLinkedGeo(graph *VertexGraph, out *LinkedGeoPolygon) {
 	*out = LinkedGeoPolygon{}
 	var loop *LinkedGeoLoop
-	var nextVtx GeoCoord
+	var nextVtx geoCoord
 
 	// Find the next unused entry point
 	for edge := firstVertexNode(graph); edge != nil; edge = firstVertexNode(graph) {

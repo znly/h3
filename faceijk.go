@@ -52,7 +52,7 @@ const (
 const M_SQRT7 = 2.6457513110645905905016157536392604257102
 
 /** @brief icosahedron face centers in Lat/Lon radians */
-var faceCenterGeo = [NUM_ICOSA_FACES]GeoCoord{
+var faceCenterGeo = [NUM_ICOSA_FACES]geoCoord{
 	{0.803582649718989942, 1.248397419617396099},   // face  0
 	{1.307747883455638156, 2.536945009877921159},   // face  1
 	{1.054751253523952054, -1.347517358900396623},  // face  2
@@ -344,7 +344,7 @@ var unitScaleByCIIres = []int{
  * @param res The desired H3 resolution for the encoding.
  * @param h The address *FaceIJK of the containing cell at resolution res.
  */
-func _geoToFaceIjk(g *GeoCoord, res int, h *FaceIJK) {
+func _geoToFaceIjk(g *geoCoord, res int, h *FaceIJK) {
 	// first convert to hex2d
 	var v Vec2d
 	_geoToHex2d(g, res, &h.face, &v)
@@ -361,7 +361,7 @@ func _geoToFaceIjk(g *GeoCoord, res int, h *FaceIJK) {
  * @param face The icosahedral face containing the spherical coordinates.
  * @param v The 2D hex coordinates of the cell containing the point.
  */
-func _geoToHex2d(g *GeoCoord, res int, face *int, v *Vec2d) {
+func _geoToHex2d(g *geoCoord, res int, face *int, v *Vec2d) {
 	var v3d Vec3d
 	_geoToVec3d(g, &v3d)
 
@@ -421,7 +421,7 @@ func _geoToHex2d(g *GeoCoord, res int, face *int, v *Vec2d) {
  *        grid relative to the specified resolution.
  * @param g The spherical coordinates of the cell center point.
  */
-func _hex2dToGeo(v *Vec2d, face int, res int, substrate int, g *GeoCoord) {
+func _hex2dToGeo(v *Vec2d, face int, res int, substrate int, g *geoCoord) {
 	// calculate (r, theta) in hex2d
 	r := _v2dMag(v)
 
@@ -471,7 +471,7 @@ func _hex2dToGeo(v *Vec2d, face int, res int, substrate int, g *GeoCoord) {
  * @param res The H3 resolution of the cell.
  * @param g The spherical coordinates of the cell center point.
  */
-func _faceIjkToGeo(h *FaceIJK, res int, g *GeoCoord) {
+func _faceIjkToGeo(h *FaceIJK, res int, g *geoCoord) {
 	var v Vec2d
 	_ijkToHex2d(&h.coord, &v)
 	_hex2dToGeo(&v, h.face, res, 0, g)
@@ -569,7 +569,7 @@ func _faceIjkPentToGeoBoundary(h *FaceIJK, res int, g *GeoBoundary) {
 			_v2dIntersect(&orig2d0, &orig2d1, edge0, edge1, &inter)
 
 			if len(g.Verts) <= g.numVerts {
-				g.Verts = append(g.Verts, GeoCoord{})
+				g.Verts = append(g.Verts, geoCoord{})
 			}
 			_hex2dToGeo(&inter, tmpFijk.face, adjRes, 1, &g.Verts[g.numVerts])
 			g.numVerts++
@@ -582,7 +582,7 @@ func _faceIjkPentToGeoBoundary(h *FaceIJK, res int, g *GeoBoundary) {
 			var vec Vec2d
 			_ijkToHex2d(&fijk.coord, &vec)
 
-			coord := GeoCoord{}
+			coord := geoCoord{}
 			_hex2dToGeo(&vec, fijk.face, adjRes, 1, &coord)
 
 			if len(g.Verts) > g.numVerts {
@@ -761,7 +761,7 @@ func _faceIjkToGeoBoundary(h *FaceIJK, res int, isPentagon bool, g *GeoBoundary)
 			isIntersectionAtVertex := _v2dEquals(&orig2d0, &inter) || _v2dEquals(&orig2d1, &inter)
 			if !isIntersectionAtVertex {
 				if len(g.Verts) == g.numVerts {
-					g.Verts = append(g.Verts, GeoCoord{})
+					g.Verts = append(g.Verts, geoCoord{})
 				}
 				_hex2dToGeo(&inter, centerIJK.face, adjRes, 1, &g.Verts[g.numVerts])
 				g.numVerts++
@@ -775,7 +775,7 @@ func _faceIjkToGeoBoundary(h *FaceIJK, res int, isPentagon bool, g *GeoBoundary)
 			var vec Vec2d
 			_ijkToHex2d(&fijk.coord, &vec)
 			if len(g.Verts) == g.numVerts {
-				g.Verts = append(g.Verts, GeoCoord{})
+				g.Verts = append(g.Verts, geoCoord{})
 			}
 			_hex2dToGeo(&vec, fijk.face, adjRes, 1, &g.Verts[g.numVerts])
 			g.numVerts++

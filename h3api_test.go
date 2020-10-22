@@ -16,18 +16,18 @@ import (
 
 func TestH3Api(t *testing.T) {
 	t.Run("GeoToH3_res", func(t *testing.T) {
-		anywhere := GeoCoord{0, 0}
-		require.True(t, GeoToH3(&anywhere, -1) == 0, "resolution below 0 is invalid")
-		require.True(t, GeoToH3(&anywhere, 16) == 0, "resolution above 15 is invalid")
+		anywhere := GeoFromRadians(0, 0)
+		require.True(t, GeoToH3(anywhere, -1) == 0, "resolution below 0 is invalid")
+		require.True(t, GeoToH3(anywhere, 16) == 0, "resolution above 15 is invalid")
 	})
 
 	t.Run("GeoToH3_coord", func(t *testing.T) {
-		invalidLat := GeoCoord{math.NaN(), 0}
-		invalidLon := GeoCoord{0, math.NaN()}
-		invalidLatLon := GeoCoord{math.Inf(1), math.Inf(-1)}
-		require.True(t, GeoToH3(&invalidLat, 1) == 0, "invalid latitude is rejected")
-		require.True(t, GeoToH3(&invalidLon, 1) == 0, "invalid longitude is rejected")
-		require.True(t, GeoToH3(&invalidLatLon, 1) == 0, "coordinates with infinity are rejected")
+		invalidLat := GeoFromRadians(math.NaN(), 0)
+		invalidLon := GeoFromRadians(0, math.NaN())
+		invalidLatLon := GeoFromRadians(math.Inf(1), math.Inf(-1))
+		require.True(t, GeoToH3(invalidLat, 1) == 0, "invalid latitude is rejected")
+		require.True(t, GeoToH3(invalidLon, 1) == 0, "invalid longitude is rejected")
+		require.True(t, GeoToH3(invalidLatLon, 1) == 0, "coordinates with infinity are rejected")
 	})
 
 	t.Run("h3ToGeoBoundary_classIIIEdgeVertex", func(t *testing.T) {
@@ -52,7 +52,7 @@ func TestH3Api(t *testing.T) {
 		h3 := stringToH3("894cc536537ffff")
 		var boundary GeoBoundary
 		boundary.numVerts = 7
-		boundary.Verts = make([]GeoCoord, 7)
+		boundary.Verts = make([]geoCoord, 7)
 
 		setGeoDegs(&boundary.Verts[0], 18.043333154, -66.27836523500002)
 		setGeoDegs(&boundary.Verts[1], 18.042238363, -66.27929062800001)
@@ -69,7 +69,7 @@ func TestH3Api(t *testing.T) {
 		h3 := H3Index(0x87dc6d364ffffff)
 		var boundary GeoBoundary
 		boundary.numVerts = 6
-		boundary.Verts = make([]GeoCoord, 6)
+		boundary.Verts = make([]geoCoord, 6)
 
 		setGeoDegs(&boundary.Verts[0], -52.0130533678236091, -34.6232931343713091)
 		setGeoDegs(&boundary.Verts[1], -52.0041156384652012, -34.6096733160584549)
@@ -115,7 +115,7 @@ func _Test_testdata(t *testing.T) {
 				if len(coords) == 1 {
 					expectG := &coords[0]
 
-					g := GeoCoord{}
+					g := geoCoord{}
 					h3ToGeo(h, &g)
 
 					require.True(t, geoDegreeEqual(&g, expectG), "h3ToGeo %x %d %v %v", h, h, expectG.AsDegrees(), g.AsDegrees())
@@ -153,11 +153,11 @@ func assertBoundary(t *testing.T, h H3Index, expectGB *GeoBoundary) {
 	}
 }
 
-func geoDegreeEqual(p1 *GeoCoord, p2 *GeoCoord) bool {
+func geoDegreeEqual(p1 *geoCoord, p2 *geoCoord) bool {
 	return geoAlmostEqualThreshold(p1.AsDegrees(), p2.AsDegrees(), 0.000001)
 }
 
-type expects map[H3Index][]GeoCoord
+type expects map[H3Index][]geoCoord
 
 func loadData(filename string) expects {
 	f, err := os.Open(filename)
@@ -181,7 +181,7 @@ func parseInputs(reader io.Reader) expects {
 	}
 
 	var h uint64
-	var coord *GeoCoord
+	var coord *geoCoord
 	var inCell bool
 
 	for tok := s.Scan(); tok != scanner.EOF; tok = s.Next() {
@@ -194,12 +194,12 @@ func parseInputs(reader io.Reader) expects {
 			if h == 0 {
 				h, _ = strconv.ParseUint(tmp.String(), 16, 64)
 				clearTmp()
-				set[H3Index(h)] = []GeoCoord{}
+				set[H3Index(h)] = []geoCoord{}
 				break
 			}
 
 			if coord == nil {
-				coord = &GeoCoord{}
+				coord = &geoCoord{}
 			}
 
 			if coord.Lat == 0 {

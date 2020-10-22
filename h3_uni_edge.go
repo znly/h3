@@ -199,7 +199,7 @@ func getH3UnidirectionalEdgesFromHexagon(origin H3Index, edges []H3Index) {
  * @param  boundary Geo boundary to look in
  * @return          Whether a match was found
  */
-func _hasMatchingVertex(vertex *GeoCoord, boundary *GeoBoundary) bool {
+func _hasMatchingVertex(vertex *geoCoord, boundary *GeoBoundary) bool {
 	for i := 0; i < boundary.numVerts; i++ {
 		if geoAlmostEqualThreshold(vertex, &boundary.Verts[i], 0.000001) {
 			return true
@@ -217,7 +217,7 @@ func getH3UnidirectionalEdgeBoundary(edge H3Index, gb *GeoBoundary) {
 	// TODO: More efficient solution :)
 	origin := GeoBoundary{}
 	destination := GeoBoundary{}
-	postponedVertex := GeoCoord{}
+	postponedVertex := geoCoord{}
 	hasPostponedVertex := false
 
 	h3ToGeoBoundary(getOriginH3IndexFromUnidirectionalEdge(edge), &origin)
