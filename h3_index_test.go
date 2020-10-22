@@ -268,7 +268,7 @@ func Test_h3ToCenterChild(t *testing.T) {
 
 func Test_h3ToGeoBoundary(t *testing.T) {
 	t.Run("h3ToGeo", func(t *testing.T) {
-		expectGeo := geoCoord{37.812291538780364, -122.41353593838753}.AsRadians()
+		expectGeo := GeoFromDegrees(37.812291538780364, -122.41353593838753)
 
 		g := geoCoord{}
 		h3ToGeo(613196569891569663, &g)
@@ -280,12 +280,12 @@ func Test_h3ToGeoBoundary(t *testing.T) {
 		expect := GeoBoundary{
 			numVerts: 6,
 			Verts: []geoCoord{
-				*geoCoord{37.80760100422449, -122.41208776737979}.AsRadians(),
-				*geoCoord{37.81114379658359, -122.40761222203226}.AsRadians(),
-				*geoCoord{37.815834307032965, -122.4090602822424}.AsRadians(),
-				*geoCoord{37.816981839321244, -122.41498422661992}.AsRadians(),
-				*geoCoord{37.81343893006517, -122.41945955867847}.AsRadians(),
-				*geoCoord{37.808748605427716, -122.41801115969699}.AsRadians(),
+				*GeoFromDegrees(37.80760100422449, -122.41208776737979),
+				*GeoFromDegrees(37.81114379658359, -122.40761222203226),
+				*GeoFromDegrees(37.815834307032965, -122.4090602822424),
+				*GeoFromDegrees(37.816981839321244, -122.41498422661992),
+				*GeoFromDegrees(37.81343893006517, -122.41945955867847),
+				*GeoFromDegrees(37.808748605427716, -122.41801115969699),
 			},
 		}
 
@@ -303,16 +303,16 @@ func Test_h3ToGeoBoundary(t *testing.T) {
 		expect := GeoBoundary{
 			numVerts: 10,
 			Verts: []geoCoord{
-				*geoCoord{50.104450101, -143.478843877}.AsRadians(),
-				*geoCoord{50.103795870, -143.480089732}.AsRadians(),
-				*geoCoord{50.103371455, -143.480450779}.AsRadians(),
-				*geoCoord{50.102409316, -143.479865681}.AsRadians(),
-				*geoCoord{50.102057919, -143.479347956}.AsRadians(),
-				*geoCoord{50.102117500, -143.477740557}.AsRadians(),
-				*geoCoord{50.102324725, -143.477059533}.AsRadians(),
-				*geoCoord{50.103323690, -143.476651121}.AsRadians(),
-				*geoCoord{50.103803169, -143.476747929}.AsRadians(),
-				*geoCoord{50.104360999, -143.478102984}.AsRadians(),
+				*GeoFromDegrees(50.104450101, -143.478843877),
+				*GeoFromDegrees(50.103795870, -143.480089732),
+				*GeoFromDegrees(50.103371455, -143.480450779),
+				*GeoFromDegrees(50.102409316, -143.479865681),
+				*GeoFromDegrees(50.102057919, -143.479347956),
+				*GeoFromDegrees(50.102117500, -143.477740557),
+				*GeoFromDegrees(50.102324725, -143.477059533),
+				*GeoFromDegrees(50.103323690, -143.476651121),
+				*GeoFromDegrees(50.103803169, -143.476747929),
+				*GeoFromDegrees(50.104360999, -143.478102984),
 			},
 		}
 
