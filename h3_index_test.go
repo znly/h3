@@ -10,16 +10,12 @@ import (
 const deg2rad = math.Pi / 180.0
 const rad2deg = 180.0 / math.Pi
 
-func GeoFromWGS84(lat float64, lon float64) *GeoCoord {
-	return &GeoCoord{lat * deg2rad, lon * deg2rad}
-}
-
 func Test_geoToH3(t *testing.T) {
 
 	t.Run("GeoToH3", func(t *testing.T) {
-		require.Equal(t, H3Index(614553222213795839), GeoToH3(GeoFromWGS84(0, 0), 8))
-		require.Equal(t, H3Index(613287273236004863), GeoToH3(GeoFromWGS84(45, 45), 8))
-		require.Equal(t, H3Index(612544946678792191), GeoToH3(GeoFromWGS84(90, 90), 8))
+		require.Equal(t, H3Index(614553222213795839), GeoToH3FromDeg(&GeoCoord{0, 0}, 8))
+		require.Equal(t, H3Index(613287273236004863), GeoToH3FromDeg(&GeoCoord{45, 45}, 8))
+		require.Equal(t, H3Index(612544946678792191), GeoToH3FromDeg(&GeoCoord{90, 90}, 8))
 	})
 
 	t.Run("GeoToH3 2", func(t *testing.T) {
@@ -272,7 +268,7 @@ func Test_h3ToCenterChild(t *testing.T) {
 
 func Test_h3ToGeoBoundary(t *testing.T) {
 	t.Run("h3ToGeo", func(t *testing.T) {
-		expectGeo := GeoFromWGS84(37.812291538780364, -122.41353593838753)
+		expectGeo := GeoCoord{37.812291538780364, -122.41353593838753}.AsRadians()
 
 		g := GeoCoord{}
 		h3ToGeo(613196569891569663, &g)
@@ -284,12 +280,12 @@ func Test_h3ToGeoBoundary(t *testing.T) {
 		expect := GeoBoundary{
 			numVerts: 6,
 			Verts: []GeoCoord{
-				*GeoFromWGS84(37.80760100422449, -122.41208776737979),
-				*GeoFromWGS84(37.81114379658359, -122.40761222203226),
-				*GeoFromWGS84(37.815834307032965, -122.4090602822424),
-				*GeoFromWGS84(37.816981839321244, -122.41498422661992),
-				*GeoFromWGS84(37.81343893006517, -122.41945955867847),
-				*GeoFromWGS84(37.808748605427716, -122.41801115969699),
+				*GeoCoord{37.80760100422449, -122.41208776737979}.AsRadians(),
+				*GeoCoord{37.81114379658359, -122.40761222203226}.AsRadians(),
+				*GeoCoord{37.815834307032965, -122.4090602822424}.AsRadians(),
+				*GeoCoord{37.816981839321244, -122.41498422661992}.AsRadians(),
+				*GeoCoord{37.81343893006517, -122.41945955867847}.AsRadians(),
+				*GeoCoord{37.808748605427716, -122.41801115969699}.AsRadians(),
 			},
 		}
 
@@ -307,16 +303,16 @@ func Test_h3ToGeoBoundary(t *testing.T) {
 		expect := GeoBoundary{
 			numVerts: 10,
 			Verts: []GeoCoord{
-				*GeoFromWGS84(50.104450101, -143.478843877),
-				*GeoFromWGS84(50.103795870, -143.480089732),
-				*GeoFromWGS84(50.103371455, -143.480450779),
-				*GeoFromWGS84(50.102409316, -143.479865681),
-				*GeoFromWGS84(50.102057919, -143.479347956),
-				*GeoFromWGS84(50.102117500, -143.477740557),
-				*GeoFromWGS84(50.102324725, -143.477059533),
-				*GeoFromWGS84(50.103323690, -143.476651121),
-				*GeoFromWGS84(50.103803169, -143.476747929),
-				*GeoFromWGS84(50.104360999, -143.478102984),
+				*GeoCoord{50.104450101, -143.478843877}.AsRadians(),
+				*GeoCoord{50.103795870, -143.480089732}.AsRadians(),
+				*GeoCoord{50.103371455, -143.480450779}.AsRadians(),
+				*GeoCoord{50.102409316, -143.479865681}.AsRadians(),
+				*GeoCoord{50.102057919, -143.479347956}.AsRadians(),
+				*GeoCoord{50.102117500, -143.477740557}.AsRadians(),
+				*GeoCoord{50.102324725, -143.477059533}.AsRadians(),
+				*GeoCoord{50.103323690, -143.476651121}.AsRadians(),
+				*GeoCoord{50.103803169, -143.476747929}.AsRadians(),
+				*GeoCoord{50.104360999, -143.478102984}.AsRadians(),
 			},
 		}
 

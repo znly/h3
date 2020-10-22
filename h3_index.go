@@ -852,6 +852,32 @@ func GeoToH3(g *GeoCoord, res int) H3Index {
 }
 
 /**
+* Encodes a coordinate on the sphere to the H3 index of the containing cell at
+* the specified resolution.
+*
+* Returns 0 on invalid input.
+*
+* @param g The spherical coordinates to encode, in degrees.
+* @param res The desired H3 resolution for the encoding.
+* @return The encoded H3Index (or 0 on failure).
+ */
+func GeoToH3FromDeg(g *GeoCoord, res int) H3Index {
+	gRads := g.AsRadians()
+
+	if res < 0 || res > MAX_H3_RES {
+		return H3_INVALID_INDEX
+	}
+
+	if math.IsInf(gRads.Lat, 0) || math.IsInf(g.Lon, 0) {
+		return H3_INVALID_INDEX
+	}
+
+	fijk := FaceIJK{}
+	_geoToFaceIjk(gRads, res, &fijk)
+	return _faceIjkToH3(&fijk, res)
+}
+
+/**
 * Convert an to H3Index the FaceIJK address on a specified icosahedral face.
 * @param h The H3Index.
 * @param fijk The FaceIJK address, initialized with the desired face

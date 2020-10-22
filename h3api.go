@@ -21,6 +21,7 @@ func (g GeoCoord) String() string {
 	return fmt.Sprintf("%f,%f", g.Lat, g.Lon)
 }
 
+// AsDegrees converts the coordinates from radians to degrees.
 func (g GeoCoord) AsDegrees() *GeoCoord {
 	return &GeoCoord{
 		Lon: normalizeDegree(radsToDegs(g.Lon), -180.0, 180),
@@ -28,10 +29,11 @@ func (g GeoCoord) AsDegrees() *GeoCoord {
 	}
 }
 
+// AsRadians converts the coordinates from degrees to radians.
 func (g GeoCoord) AsRadians() *GeoCoord {
 	return &GeoCoord{
-		Lon: radsToDegs(g.Lon),
-		Lat: radsToDegs(g.Lat),
+		Lon: degsToRads(g.Lon),
+		Lat: degsToRads(g.Lat),
 	}
 }
 
