@@ -14,10 +14,10 @@ type GeoIterator interface {
 	// zero
 	IsZero() bool
 	// true for continue
-	NewIterate() func(vertexA *GeoCoord, vertexB *GeoCoord) bool
+	NewIterate() func(vertexA *geoCoord, vertexB *geoCoord) bool
 }
 
-func pointInside(iterator GeoIterator, bbox *BBox, coord *GeoCoord) bool {
+func pointInside(iterator GeoIterator, bbox *BBox, coord *geoCoord) bool {
 	// fail fast if we're outside the bounding box
 	if !bboxContains(bbox, coord) {
 		return false
@@ -29,8 +29,8 @@ func pointInside(iterator GeoIterator, bbox *BBox, coord *GeoCoord) bool {
 	lat := coord.Lat
 	lng := NORMALIZE_LON(coord.Lon, isTransmeridian)
 
-	var a GeoCoord
-	var b GeoCoord
+	var a geoCoord
+	var b geoCoord
 
 	iterate := iterator.NewIterate()
 
@@ -105,7 +105,7 @@ func bboxFrom(iterator GeoIterator, bbox *BBox) {
 	isTransmeridian := false
 
 	var lon, lat float64
-	var coord, next GeoCoord
+	var coord, next geoCoord
 
 	iterate := iterator.NewIterate()
 
@@ -160,7 +160,7 @@ func bboxFrom(iterator GeoIterator, bbox *BBox) {
  */
 func isClockwiseNormalized(iterator GeoIterator, isTransmeridian bool) bool {
 	sum := float64(0)
-	var a, b GeoCoord
+	var a, b geoCoord
 
 	iterate := iterator.NewIterate()
 

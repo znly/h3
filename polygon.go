@@ -21,7 +21,7 @@ func bboxesFromGeoPolygon(polygon *GeoPolygon, bboxes []BBox) {
  * @param coord      The coordinate to check
  * @return           Whether the point is contained
  */
-func pointInsidePolygon(geoPolygon *GeoPolygon, bboxes []BBox, coord *GeoCoord) bool {
+func pointInsidePolygon(geoPolygon *GeoPolygon, bboxes []BBox, coord *geoCoord) bool {
 	// Start with contains state of primary geofence
 	contains := pointInside(&(geoPolygon.geofence), &bboxes[0], coord)
 

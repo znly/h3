@@ -12,26 +12,39 @@ const MAX_CELL_BNDRY_VERTS = 10
 /**
   @brief latitude/longitude in radians
 */
-type GeoCoord struct {
+type geoCoord struct {
 	Lat float64 ///< latitude in radians
 	Lon float64 ///< longitude in radians
 }
 
-func (g GeoCoord) String() string {
+// GeoFromDegrees creates geoCoords from degrees
+func GeoFromDegrees(lat, lon float64) *geoCoord {
+	return GeoFromRadians(lat, lon).AsRadians()
+}
+
+// GeoFromRadians creates geoCoords from Radians
+func GeoFromRadians(lat, lon float64) *geoCoord {
+	return &geoCoord{
+		Lat: lat,
+		Lon: lon,
+	}
+}
+
+func (g geoCoord) String() string {
 	return fmt.Sprintf("%f,%f", g.Lat, g.Lon)
 }
 
 // AsDegrees converts the coordinates from radians to degrees.
-func (g GeoCoord) AsDegrees() *GeoCoord {
-	return &GeoCoord{
+func (g geoCoord) AsDegrees() *geoCoord {
+	return &geoCoord{
 		Lon: normalizeDegree(radsToDegs(g.Lon), -180.0, 180),
 		Lat: normalizeDegree(radsToDegs(g.Lat), -90, 90),
 	}
 }
 
 // AsRadians converts the coordinates from degrees to radians.
-func (g GeoCoord) AsRadians() *GeoCoord {
-	return &GeoCoord{
+func (g geoCoord) AsRadians() *geoCoord {
+	return &geoCoord{
 		Lon: degsToRads(g.Lon),
 		Lat: degsToRads(g.Lat),
 	}
@@ -42,7 +55,7 @@ func (g GeoCoord) AsRadians() *GeoCoord {
 */
 type GeoBoundary struct {
 	numVerts int        ///< number of vertices
-	Verts    []GeoCoord ///< vertices in ccw order
+	Verts    []geoCoord ///< vertices in ccw order
 }
 
 func (gb GeoBoundary) String() string {
@@ -59,7 +72,7 @@ func (gb GeoBoundary) String() string {
 }
 
 func (gb GeoBoundary) AsDegrees() *GeoBoundary {
-	list := make([]GeoCoord, len(gb.Verts))
+	list := make([]geoCoord, len(gb.Verts))
 
 	for i := range gb.Verts {
 		list[i] = *(gb.Verts[i].AsDegrees())
@@ -71,7 +84,7 @@ func (gb GeoBoundary) AsDegrees() *GeoBoundary {
 }
 
 func (gb GeoBoundary) AsRadians() *GeoBoundary {
-	list := make([]GeoCoord, len(gb.Verts))
+	list := make([]geoCoord, len(gb.Verts))
 
 	for i := range gb.Verts {
 		list[i] = *(gb.Verts[i].AsDegrees())
@@ -87,17 +100,17 @@ func (gb GeoBoundary) AsRadians() *GeoBoundary {
  */
 type Geofence struct {
 	numVerts int
-	verts    []GeoCoord
+	verts    []geoCoord
 }
 
 func (g *Geofence) IsZero() bool {
 	return g == nil || g.numVerts == 0
 }
 
-func (g *Geofence) NewIterate() func(vertexA *GeoCoord, vertexB *GeoCoord) bool {
+func (g *Geofence) NewIterate() func(vertexA *geoCoord, vertexB *geoCoord) bool {
 	loopIndex := -1
 
-	return func(vertexA *GeoCoord, vertexB *GeoCoord) bool {
+	return func(vertexA *geoCoord, vertexB *geoCoord) bool {
 		loopIndex++
 
 		if loopIndex >= g.numVerts {
@@ -131,17 +144,17 @@ type GeoMultiPolygon struct {
 /**
  *  @brief A coordinate node in a linked geo structure, part of a linked list
  */
-type LinkedGeoCoord struct {
-	vertex GeoCoord
-	next   *LinkedGeoCoord
+type LinkedgeoCoord struct {
+	vertex geoCoord
+	next   *LinkedgeoCoord
 }
 
 /**
  *  @brief A loop node in a linked geo structure, part of a linked list
  */
 type LinkedGeoLoop struct {
-	first *LinkedGeoCoord
-	last  *LinkedGeoCoord
+	first *LinkedgeoCoord
+	last  *LinkedgeoCoord
 	next  *LinkedGeoLoop
 }
 
@@ -149,11 +162,11 @@ func (l *LinkedGeoLoop) IsZero() bool {
 	return l == nil || l.first == nil
 }
 
-func (l *LinkedGeoLoop) NewIterate() func(vertexA *GeoCoord, vertexB *GeoCoord) bool {
-	var currentCoord, nextCoord *LinkedGeoCoord
+func (l *LinkedGeoLoop) NewIterate() func(vertexA *geoCoord, vertexB *geoCoord) bool {
+	var currentCoord, nextCoord *LinkedgeoCoord
 
-	return func(vertexA *GeoCoord, vertexB *GeoCoord) bool {
-		var getNextCoord = func(coordToCheck *LinkedGeoCoord) *LinkedGeoCoord {
+	return func(vertexA *geoCoord, vertexB *geoCoord) bool {
+		var getNextCoord = func(coordToCheck *LinkedgeoCoord) *LinkedgeoCoord {
 			if coordToCheck == nil {
 				return l.first
 			}

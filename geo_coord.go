@@ -41,7 +41,7 @@ func _posAngleRads(rads float64) float64 {
  * @return Whether or not the two coordinates are within the threshold distance
  *         of each other.
  */
-func geoAlmostEqualThreshold(p1 *GeoCoord, p2 *GeoCoord, threshold float64) bool {
+func geoAlmostEqualThreshold(p1 *geoCoord, p2 *geoCoord, threshold float64) bool {
 	return math.Abs(p1.Lat-p2.Lat) < threshold && math.Abs(p1.Lon-p2.Lon) < threshold
 }
 
@@ -54,7 +54,7 @@ func geoAlmostEqualThreshold(p1 *GeoCoord, p2 *GeoCoord, threshold float64) bool
  * @return Whether or not the two coordinates are within the epsilon distance
  *         of each other.
  */
-func geoAlmostEqual(p1 *GeoCoord, p2 *GeoCoord) bool {
+func geoAlmostEqual(p1 *geoCoord, p2 *geoCoord) bool {
 	return geoAlmostEqualThreshold(p1, p2, EPSILON_RAD)
 }
 
@@ -65,7 +65,7 @@ func geoAlmostEqual(p1 *GeoCoord, p2 *GeoCoord) bool {
  * @param latDegs The desired latitidue in decimal degrees.
  * @param lonDegs The desired longitude in decimal degrees.
  */
-func setGeoDegs(p *GeoCoord, latDegs float64, lonDegs float64) {
+func setGeoDegs(p *geoCoord, latDegs float64, lonDegs float64) {
 	_setGeoRads(p, degsToRads(latDegs), degsToRads(lonDegs))
 }
 
@@ -76,7 +76,7 @@ func setGeoDegs(p *GeoCoord, latDegs float64, lonDegs float64) {
  * @param latRads The desired latitidue in decimal radians.
  * @param lonRads The desired longitude in decimal radians.
  */
-func _setGeoRads(p *GeoCoord, latRads float64, lonRads float64) {
+func _setGeoRads(p *geoCoord, latRads float64, lonRads float64) {
 	p.Lat = latRads
 	p.Lon = lonRads
 }
@@ -133,7 +133,7 @@ func constrainLng(lng float64) float64 {
  * @param p2 The second spherical coordinates.
  * @return The great circle distance in radians between p1 and p2.
  */
-func _geoDistRads(p1 *GeoCoord, p2 *GeoCoord) float64 {
+func _geoDistRads(p1 *geoCoord, p2 *geoCoord) float64 {
 	// use spherical triangle with p1 at A, p2 at B, and north pole at C
 	bigC := math.Abs(p2.Lon - p1.Lon)
 	if bigC > M_PI {
@@ -174,7 +174,7 @@ func _geoDistRads(p1 *GeoCoord, p2 *GeoCoord) float64 {
  * @param p2 The second spherical coordinates.
  * @return The distance in kilometers between p1 and p2.
  */
-func _geoDistKm(p1 *GeoCoord, p2 *GeoCoord) float64 {
+func _geoDistKm(p1 *geoCoord, p2 *geoCoord) float64 {
 	return EARTH_RADIUS_KM * _geoDistRads(p1, p2)
 }
 
@@ -185,7 +185,7 @@ func _geoDistKm(p1 *GeoCoord, p2 *GeoCoord) float64 {
  * @param p2 The second spherical coordinates.
  * @return The azimuth in radians from p1 to p2.
  */
-func _geoAzimuthRads(p1 *GeoCoord, p2 *GeoCoord) float64 {
+func _geoAzimuthRads(p1 *geoCoord, p2 *geoCoord) float64 {
 	return math.Atan2(math.Cos(p2.Lat)*math.Sin(p2.Lon-p1.Lon),
 		math.Cos(p1.Lat)*math.Sin(p2.Lat)-
 			math.Sin(p1.Lat)*math.Cos(p2.Lat)*math.Cos(p2.Lon-p1.Lon))
@@ -201,7 +201,7 @@ func _geoAzimuthRads(p1 *GeoCoord, p2 *GeoCoord) float64 {
  * @param p2 The spherical coordinates at the desired azimuth and distance from
  * p1.
  */
-func _geoAzDistanceRads(p1 *GeoCoord, az float64, distance float64, p2 *GeoCoord) {
+func _geoAzDistanceRads(p1 *geoCoord, az float64, distance float64, p2 *geoCoord) {
 	if distance < EPSILON {
 		*p2 = *p1
 		return

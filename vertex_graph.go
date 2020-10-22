@@ -5,8 +5,8 @@ import (
 )
 
 type VertexNode struct {
-	from GeoCoord
-	to   GeoCoord
+	from geoCoord
+	to   geoCoord
 	next *VertexNode
 }
 
@@ -41,7 +41,7 @@ func initVertexGraph(graph *VertexGraph, numBuckets int, res int) {
  * @param graph Graph to destroy
  */
 func destroyVertexGraph(graph *VertexGraph) {
-	node := firstVertexNode(graph);
+	node := firstVertexNode(graph)
 	for node != nil {
 		removeVertexNode(graph, node)
 		node = firstVertexNode(graph)
@@ -60,13 +60,13 @@ func destroyVertexGraph(graph *VertexGraph) {
  * @param  numBuckets Number of buckets in the graph
  * @return            Integer hash
  */
-func _hashVertex(vertex *GeoCoord, res int, numBuckets int) uint32 {
+func _hashVertex(vertex *geoCoord, res int, numBuckets int) uint32 {
 	// Simple hash: Take the sum of the Lat and Lon with a precision level
 	// determined by the resolution, converted to int, modulo bucket count.
 	return uint32(math.Mod(math.Abs((vertex.Lat+vertex.Lon)*math.Pow(10, float64(15-res))), float64(numBuckets)))
 }
 
-func _initVertexNode(node *VertexNode, fromVtx *GeoCoord, toVtx *GeoCoord) {
+func _initVertexNode(node *VertexNode, fromVtx *geoCoord, toVtx *geoCoord) {
 	node.from = *fromVtx
 	node.to = *toVtx
 	node.next = nil
@@ -79,7 +79,7 @@ func _initVertexNode(node *VertexNode, fromVtx *GeoCoord, toVtx *GeoCoord) {
  * @param toVtx   End vertex
  * @return        Pointer to the new node
  */
-func addVertexNode(graph *VertexGraph, fromVtx *GeoCoord, toVtx *GeoCoord) *VertexNode {
+func addVertexNode(graph *VertexGraph, fromVtx *geoCoord, toVtx *geoCoord) *VertexNode {
 	// Make the new node
 	node := &VertexNode{}
 
@@ -163,7 +163,7 @@ func removeVertexNode(graph *VertexGraph, node *VertexNode) int {
  * @param  toVtx   End vertex, or nil if we don't care
  * @return         Pointer to the vertex node, if found
  */
-func findNodeForEdge(graph *VertexGraph, fromVtx *GeoCoord, toVtx *GeoCoord) *VertexNode {
+func findNodeForEdge(graph *VertexGraph, fromVtx *geoCoord, toVtx *geoCoord) *VertexNode {
 	// Determine location
 	index := _hashVertex(fromVtx, graph.res, graph.numBuckets)
 	// Check whether there's an existing node in that spot
@@ -186,7 +186,7 @@ func findNodeForEdge(graph *VertexGraph, fromVtx *GeoCoord, toVtx *GeoCoord) *Ve
  * @param  fromVtx Start vertex
  * @return         Pointer to the vertex node, if found
  */
-func findNodeForVertex(graph *VertexGraph, fromVtx *GeoCoord) *VertexNode {
+func findNodeForVertex(graph *VertexGraph, fromVtx *geoCoord) *VertexNode {
 	return findNodeForEdge(graph, fromVtx, nil)
 }
 
